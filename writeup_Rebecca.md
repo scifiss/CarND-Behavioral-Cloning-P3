@@ -127,6 +127,7 @@ Results: worse. the car falls off the lane.
 try NVIDIA network (https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
 
 '''
+
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5,
         input_shape=( height, width,3)))
@@ -148,6 +149,7 @@ model.add(Dense(100))
 model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
+
 '''
 
 Results: worse. the car runs very slow and falls off the lane.
