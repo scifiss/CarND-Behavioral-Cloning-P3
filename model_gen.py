@@ -40,7 +40,14 @@ correctedAngle = 0.1
 # 2. reverse running in the center
 # 3. recovery from left and right sides of the lane
 # 4. two more runs on the brick bridge
-
+with open('alldata/driving_log.csv') as csvfile:
+    reader = csv.reader(csvfile)  
+    for line in reader:        
+        angle = float(line[3])
+        angles.append(angle)
+n0, bins, patches = plt.hist(angles, 50)  
+plt.show()                  
+angles = []        
 with open('alldata/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     #next(reader,None)   # use this if there is a header
@@ -58,7 +65,13 @@ name = './alldata/IMG/'+sample[0].split('\\')[-1]
 
 image = cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2RGB)
 height,width,channels = image.shape
-#plt.imshow(image)
+
+gaussian_noise =random_noise(image,mode='gaussian',var=0.001)*255
+fig,axarr = plt.subplots(1,3, figsize=(15,25))
+axarr[0].imshow(image)
+axarr[1].imshow(gaussian_noise.astype('uint8') )
+axarr[2].imshow(cv2.flip(image,1))
+fig.savefig('examples\image_noised_flipped.png')  
 
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 Batch_size=128
