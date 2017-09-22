@@ -123,6 +123,29 @@ Results: worse. the car falls off the lane.
 
 7th trial:
 try NVIDIA network (https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
+'''
+model = Sequential()
+model.add(Lambda(lambda x: x/255.0-0.5,
+        input_shape=( height, width,3)))
+model.add(Cropping2D(cropping=((70,25),(0,0))))
+
+model.add(Convolution2D(24, 5, 5,subsample=(2,2), activation="relu"))
+model.add(MaxPooling2D())
+model.add(Convolution2D(36, 5, 5,subsample=(2,2), activation="relu"))
+model.add(MaxPooling2D())
+model.add(Convolution2D(48, 5, 5,subsample=(2,2), activation="relu"))
+model.add(MaxPooling2D())
+model.add(Convolution2D(64, 3, 3, activation="relu"))
+model.add(MaxPooling2D())
+model.add(Convolution2D(64, 3, 3, activation="relu"))
+model.add(MaxPooling2D())
+
+model.add(Flatten())
+model.add(Dense(100))
+model.add(Dense(50))
+model.add(Dense(10))
+model.add(Dense(1))
+'''
 Results: worse. the car runs very slow and falls off the lane.
 
 8th trial:
@@ -131,6 +154,7 @@ Results: more stable, but always hit the left side of the black bridge and crash
 
 9th trial:
 After scutinizing the images, I find my data along the bridge all have positive angles, accordingly the dataset along the bridge is very positively biased. Therefore, I drive the car two more times along the bridge, one is smooth driving, the other is recovering several times from both sides. I also add Gaussian noises and flipped the whole images to augment data sample.
+
 ![alt text][image11]
 ![alt text][image12]
 
@@ -155,13 +179,16 @@ To capture good driving behavior, I first recorded four laps on track one using 
 I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to go back to the center once it slides to the sides. These images show what a recovery looks like starting from the left side to the center:
 
 ![alt text][image5]
+
 ![alt text][image6]
+
 ![alt text][image7]
 
 I also drive and record twice along the brick bridge, since I noticed (during training) the car is easily to drive off to the side or to the out space after the bridge.
 
 
 Then I repeated this process on track two in order to get more data points.
+
 ![alt text][image8]
 
 To augment the dataset, I add Gaussian noise (mean=0, var=0.001, so the variation locally is around 3) to all original dataset, using their same angle measurements. I also flipped images and angles to double the original dataset. For example, here is an image that has been added noised and flipped:
@@ -169,8 +196,15 @@ To augment the dataset, I add Gaussian noise (mean=0, var=0.001, so the variatio
 ![alt text][image9]
 
 After the collection process, I had 16966 number of data points (each point has center, left, and right images). Below is the steering angle distribution.
+
 ![alt text][image10]
+
 As is visible, there are too many zeros that'll biased the dataset with straight driving. To train my model, only non-zero angles are added. Here is the angle distribution of final dataset.
+From each dataset (non-zero angle): 
+
+![alt text][image1]
+
+The entire dataset (non-zero angle):
 ![alt text][image2]
 
 I then preprocessed this data by 
