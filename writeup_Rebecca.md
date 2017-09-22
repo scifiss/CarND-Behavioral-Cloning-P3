@@ -1,9 +1,8 @@
-#**Behavioral Cloning** 
 
+# Behavioral Cloning Project
+
+**Rebecca Gao**
 ---
-
-**Behavioral Cloning Project**
-
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
 * Build, a convolution neural network in Keras that predicts steering angles from images
@@ -103,6 +102,7 @@ Results: the car can run for 10+ seconds on the road.
 	Right image is labeled with measured angle - 0.2
 Results: the car stays in the lane, until it runs off to the big open area that is connected with the lane (after the bridge).
 The major improvements seem to be due to the increased dataset.
+The car is running a little wavy.
 
 5th trial:
 The top 80 and bottom 25 pixels by width are cropped off the image.
@@ -124,19 +124,15 @@ Results: worse. the car runs very slow and falls off the lane.
 go back to Lenet network. Add max pooling layers and dropout layers.
 Results: more stable, but always hit the left side of the black bridge and crash.
 
-After scutinizing the images, I find my data along the bridge all have positive angles. So the dataset along the bridge is very biased. Therefore, I drive the car two more times along the bridge, one is smooth driving, the other is recovering several times from both sides. I also add Gaussian noises and flipped the whole images to augment data sample.
+After scutinizing the images, I find my data along the bridge all have positive angles, accordingly the dataset along the bridge is very positively biased. Therefore, I drive the car two more times along the bridge, one is smooth driving, the other is recovering several times from both sides. I also add Gaussian noises and flipped the whole images to augment data sample.
 
-
-
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+After all dataset is to be fed into the model, it fails due to running out of memory. I then use the training/validation generator to implement the model.
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture (model.py lines 103-126) consisted of a convolution neural network with the following layers and layer sizes.
 
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
 
