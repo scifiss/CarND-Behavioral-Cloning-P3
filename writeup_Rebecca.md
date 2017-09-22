@@ -25,6 +25,8 @@ The goals / steps of this project are the following:
 [image10]: ./examples/angleDist.png "orig angle distribution"
 [image11]: ./examples/center_2017_09_20_15_06_13_588smooth.jpg "smooth driving on the bridge"
 [image12]: ./examples/center_2017_09_21_13_32_43_676recover.jpg "recovery driving on the bridge"
+[image13]: ./examples/hit_the_bridge.png "hit the bridge"
+[image13]: ./examples/TrainValLoss.png "loss"
 
 ## Rubric Points
 ### _Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation._  
@@ -121,8 +123,9 @@ Results: the car is running stabler.
 Increase training data from 0.8 of the total to 0.9 of the total.	
 Results: worse. the car falls off the lane.
 
-7th trial:
+8th trial:
 try NVIDIA network (https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
+
 '''
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5,
@@ -146,13 +149,16 @@ model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
 '''
+
 Results: worse. the car runs very slow and falls off the lane.
 
-8th trial:
+9th trial:
 go back to Lenet network. Add max pooling layers and dropout layers.
 Results: more stable, but always hit the left side of the black bridge and crash.
 
-9th trial:
+![alt text][image13]
+
+10th trial:
 After scutinizing the images, I find my data along the bridge all have positive angles, accordingly the dataset along the bridge is very positively biased. Therefore, I drive the car two more times along the bridge, one is smooth driving, the other is recovering several times from both sides. I also add Gaussian noises and flipped the whole images to augment data sample.
 
 ![alt text][image11]
@@ -205,6 +211,7 @@ From each dataset (non-zero angle):
 ![alt text][image1]
 
 The entire dataset (non-zero angle):
+
 ![alt text][image2]
 
 I then preprocessed this data by 
@@ -213,15 +220,19 @@ I then preprocessed this data by
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 9 as evidenced by the validation loss starts to increase from epoch 10. (from the plot, the learning rate 0.0003 is still too high)
+
+![alt text][image10]
+
+I used an adam optimizer, although manually training the learning rate wasn't necessary, I still tune the learning rate to be lower and both training and validation loss decrease a lot.
 
 
 Further Discussion
 For me, the most uncomfortable part part is preprocessing, which is subject to subjective judgement. 
 (1) we would like to get rid of uninteresting part of a image.
 For how much upper part to be cropped off the image for training, it is done by hand selection. Different riding environment may have different noisy part. For example, for track 1, the upper 70-80 pixels can be cut off, but for track 2, the upper 80-85 pixels should be cut off. Also, how far ahead in the lane should be referenced in driving also depends on speed. The higher the speed, the farther the lane ahead should be taken into consideration.
-(2) we don't have a lot of samples of extreme data in real life. But in order to recover from the sides, we need to create a lot of artificial samples of recovering from lane edges to the center. This method of augmentation is not generalizable.
-
+(2) we don't have a lot of samples of extreme situations in real life. But in order to recover from the sides, we need to create a lot of artificial samples of recovering from lane edges to the center. This method of augmentation is not generalizable.
+(3) Currently my car can't run on track 2, which means my model is not generalized. 
 
 
 
