@@ -26,7 +26,7 @@ The goals / steps of this project are the following:
 [image11]: ./examples/center_2017_09_20_15_06_13_588smooth.jpg "smooth driving on the bridge"
 [image12]: ./examples/center_2017_09_21_13_32_43_676recover.jpg "recovery driving on the bridge"
 [image13]: ./examples/hit_the_bridge.png "hit the bridge"
-[image13]: ./examples/TrainValLoss.png "loss"
+[image14]: ./examples/TrainValLoss.png "loss"
 
 ## Rubric Points
 ### _Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation._  
@@ -224,7 +224,7 @@ I finally randomly shuffled the data set and put 20% of the data into a validati
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 9 as evidenced by the validation loss starts to increase from epoch 10. (from the plot, the learning rate 0.0003 is still too high)
 
-![alt text][image10]
+![alt text][image14]
 
 I used an adam optimizer, although manually training the learning rate wasn't necessary, I still tune the learning rate to be lower and both training and validation loss decrease a lot.
 
