@@ -125,14 +125,11 @@ Results: worse. the car falls off the lane.
 
 8th trial:
 try NVIDIA network (https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
-
-'''
-
+```
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5,
         input_shape=( height, width,3)))
 model.add(Cropping2D(cropping=((70,25),(0,0))))
-
 model.add(Convolution2D(24, 5, 5,subsample=(2,2), activation="relu"))
 model.add(MaxPooling2D())
 model.add(Convolution2D(36, 5, 5,subsample=(2,2), activation="relu"))
@@ -143,15 +140,12 @@ model.add(Convolution2D(64, 3, 3, activation="relu"))
 model.add(MaxPooling2D())
 model.add(Convolution2D(64, 3, 3, activation="relu"))
 model.add(MaxPooling2D())
-
 model.add(Flatten())
 model.add(Dense(100))
 model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
-
-'''
-
+```
 Results: worse. the car runs very slow and falls off the lane.
 
 9th trial:
