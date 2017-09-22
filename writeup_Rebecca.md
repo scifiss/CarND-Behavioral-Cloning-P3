@@ -15,11 +15,16 @@ The goals / steps of this project are the following:
 
 [image1]: ./examples/angleDistForDifferentDataset.png "Angle distribution from different datasets"
 [image2]: ./examples/angleDistNoZeros.png "Final angle distribution"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image3]: ./examples/structure.png "Architecture"
+[image4]: ./examples/center_2017_08_04_17_12_02_042.jpg "center driving"
+[image5]: ./examples/center_2017_09_18_14_09_18_254.jpg "Recovery Image 1"
+[image6]: ./examples/center_2017_09_18_14_09_24_027.jpg "Recovery Image 2"
+[image7]: ./examples/center_2017_09_18_14_09_27_036.jpg "Recovery Image 3"
+[image8]: ./examples/center_2017_09_15_15_18_08_086.jpg "track 2"
+[image9]: ./examples/augImages.png "orig noisy flipped"
+[image10]: ./examples/angleDist.png "orig angle distribution"
+[image11]: ./examples/center_2017_09_20_15_06_13_588smooth.jpg "smooth driving on the bridge"
+[image12]: ./examples/center_2017_09_21_13_32_43_676recover.jpg "recovery driving on the bridge"
 
 ## Rubric Points
 ### _Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation._  
@@ -124,7 +129,10 @@ Results: worse. the car runs very slow and falls off the lane.
 go back to Lenet network. Add max pooling layers and dropout layers.
 Results: more stable, but always hit the left side of the black bridge and crash.
 
+9th trial:
 After scutinizing the images, I find my data along the bridge all have positive angles, accordingly the dataset along the bridge is very positively biased. Therefore, I drive the car two more times along the bridge, one is smooth driving, the other is recovering several times from both sides. I also add Gaussian noises and flipped the whole images to augment data sample.
+![alt text][image11]
+![alt text][image12]
 
 After all dataset is to be fed into the model, it fails due to running out of memory. I then use the training/validation generator to implement the model.
 
@@ -134,36 +142,42 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 The final model architecture (model.py lines 103-126) consisted of a convolution neural network with the following layers and layer sizes.
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+Here is a visualization of the architecture 
 
-![alt text][image1]
+![alt text][image3]
 
 #### 3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+To capture good driving behavior, I first recorded four laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image2]
-
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
 ![alt text][image4]
+
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to go back to the center once it slides to the sides. These images show what a recovery looks like starting from the left side to the center:
+
 ![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
 ![alt text][image6]
 ![alt text][image7]
 
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-* crop the image
+I also drive and record twice along the brick bridge, since I noticed (during training) the car is easily to drive off to the side or to the out space after the bridge.
 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
+Then I repeated this process on track two in order to get more data points.
+![alt text][image8]
+
+To augment the dataset, I add Gaussian noise (mean=0, var=0.001, so the variation locally is around 3) to all original dataset, using their same angle measurements. I also flipped images and angles to double the original dataset. For example, here is an image that has been added noised and flipped:
+
+![alt text][image9]
+
+After the collection process, I had 16966 number of data points (each point has center, left, and right images). Below is the steering angle distribution.
+![alt text][image10]
+As is visible, there are too many zeros that'll biased the dataset with straight driving. To train my model, only non-zero angles are added. Here is the angle distribution of final dataset.
+![alt text][image2]
+
+I then preprocessed this data by 
+* crop the image (cut off the upper 75 pixels in height and the lower 25 pixels in height)
+* normalize the values of each color channel(mean=0, var=1)
+
+I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
 
